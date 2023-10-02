@@ -88,7 +88,7 @@ const EditableCell = ({ rowData, container, showEditing, hideEditing }) => {
         <>
           <div>
             {value && value.length > 0
-              ? value.map(x => <div>{x.label}</div>)
+              ? value.map((x, index) => <div key={index}>{x.label}</div>)
               : 'Chọn nhân viên'}
           </div>
           {teleAdv && (
@@ -193,11 +193,11 @@ const EditableCellProcess = ({
       onClick={() => handleClick()}
     >
       {!Editing && (
-        <>
+        <div>
           {value && value.length > 0
-            ? value.map(x => x.value).join(',')
+            ? value.map(x => <div>{x.value}</div>)
             : 'Chọn trạng thái'}
-        </>
+        </div>
       )}
       {Editing && target && (
         <Overlay
@@ -845,7 +845,7 @@ function TelesalesList(props) {
             pageCount={PageCount}
             onEndReachedThreshold={300}
             onEndReached={handleEndReached}
-            rowHeight={80}
+            rowHeight={95}
             onScroll={() => IsEditing && document.body.click()}
             //onPagesChange={onPagesChange}
             //rowRenderer={rowRenderer}

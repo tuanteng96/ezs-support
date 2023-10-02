@@ -134,7 +134,9 @@ function PickerStatus({ children, data, onRefresh }) {
   return (
     <>
       <div onClick={() => setVisible(true)}>
-        {Status ? Status : 'Chọn trạng thái'}
+        {Status
+          ? Status.split(',').map((x, index) => <div key={index}>{x}</div>)
+          : 'Chọn trạng thái'}
       </div>
       {/* {children({
         open: () => setVisible(true),
