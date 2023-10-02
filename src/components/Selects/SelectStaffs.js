@@ -109,7 +109,6 @@ function SelectStaffs({ onChange, value, isLoading, adv, ...props }) {
       components={{
         Option: CustomOptionStaff
       }}
-      
     />
   )
 }

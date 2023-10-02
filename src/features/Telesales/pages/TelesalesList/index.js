@@ -30,19 +30,23 @@ const EditableCell = ({ rowData, container, showEditing, hideEditing }) => {
   const [loading, setLoading] = useState(false)
 
   const [value, setValue] = useState(
-    rowData?.TeleUser?.ID > 0
-      ? { label: rowData?.TeleUser?.FullName, value: rowData?.TeleUser?.ID }
+    rowData?.TeleUsers
+      ? rowData?.TeleUsers.map(x => ({ ...x, value: x.ID, label: x.FullName }))
       : null
   )
   const target = useRef(null)
 
   useEffect(() => {
     setValue(
-      rowData?.TeleUser?.ID > 0
-        ? { label: rowData?.TeleUser?.FullName, value: rowData?.TeleUser?.ID }
+      rowData?.TeleUsers
+        ? rowData?.TeleUsers.map(x => ({
+            ...x,
+            value: x.ID,
+            label: x.FullName
+          }))
         : null
     )
-  }, [rowData?.TeleUser])
+  }, [rowData?.TeleUsers])
 
   const handleClick = () => {
     if (!teleAdv) return
@@ -61,7 +65,7 @@ const EditableCell = ({ rowData, container, showEditing, hideEditing }) => {
       items: [
         {
           MemberID: rowData.ID,
-          TeleUserID: options ? options.value : null
+          TeleUserIDs: options ? options.map(x => x.value).join(',') : ''
         }
       ]
     }
@@ -76,15 +80,19 @@ const EditableCell = ({ rowData, container, showEditing, hideEditing }) => {
 
   return (
     <div
-      className="h-100 d-flex align-items-center cursor-pointer"
+      className="h-100 d-flex align-items-center cursor-pointer justify-content-between"
       ref={target}
       onClick={() => handleClick()}
     >
       {!Editing && (
         <>
-          {value ? value.label : 'Chọn nhân viên'}
+          <div>
+            {value && value.length > 0
+              ? value.map(x => <div>{x.label}</div>)
+              : 'Chọn nhân viên'}
+          </div>
           {teleAdv && (
-            <i className="fa-solid fa-user-pen pl-8px font-size-base text-muted"></i>
+            <i className="fa-solid fa-user-pen pl-8px font-size-base text-muted position-absolute right-15px"></i>
           )}
         </>
       )}
@@ -110,7 +118,7 @@ const EditableCell = ({ rowData, container, showEditing, hideEditing }) => {
                 isLoading={loading}
                 className="select-control"
                 //menuPosition="fixed"
-                name="filter.tele_user_id"
+                name="filter.tele_user_ids"
                 //menuIsOpen={true}
                 onChange={otp => {
                   onSubmit(otp)
@@ -118,6 +126,7 @@ const EditableCell = ({ rowData, container, showEditing, hideEditing }) => {
                 value={value}
                 isClearable={true}
                 adv={true}
+                isMulti
               />
             </div>
           )}
@@ -390,7 +399,7 @@ function TelesalesList(props) {
       ...filters,
       filter: {
         ...filters.filter,
-        tele_user_id: tele_user_id_new,
+        tele_user_ids: tele_user_id_new,
         tele_process: filters.filter.tele_process
           ? filters.filter.tele_process.join(',')
           : '',
@@ -460,6 +469,7 @@ function TelesalesList(props) {
         filter: {
           tele_process: '',
           tele_user_id: '',
+          tele_user_ids: '',
           wishlist: '',
           birthDateFrom: '',
           birthDateTo: '',
@@ -527,7 +537,7 @@ function TelesalesList(props) {
       let newColumns = [
         {
           key: 'CreateDate',
-          title: 'Ngày tạo & Cơ sở',
+          title: 'Ngày tạo',
           dataKey: 'CreateDate',
           cellRenderer: ({ rowData }) => (
             <div>
@@ -561,7 +571,8 @@ function TelesalesList(props) {
             </div>
           ),
           width: 200,
-          sortable: false
+          sortable: false,
+          frozen: width > 991 ? 'left' : false
         },
         {
           key: 'HomeAddress',
@@ -583,7 +594,7 @@ function TelesalesList(props) {
         },
         {
           key: 'CompanyName',
-          title: 'Link QR Code app',
+          title: 'Link QR Code tải app',
           dataKey: 'CompanyName',
           width: 290,
           sortable: false,
@@ -747,52 +758,6 @@ function TelesalesList(props) {
               showEditing={() => setIsEditing(true)}
             />
           )
-        },
-
-        {
-          key: 'action',
-          title: '',
-          dataKey: 'action',
-          cellRenderer: ({ rowData }) => (
-            <div className="d-flex">
-              <button
-                disabled={loadingCall !== ''}
-                type="button"
-                onClick={() => callNow(rowData?.MobilePhone)}
-                //href={`tel:${rowData?.MobilePhone}`}
-                className="w-38px h-38px rounded-circle btn btn-success shadow mx-4px p-0 position-relative"
-              >
-                {loadingCall === rowData?.MobilePhone ? (
-                  <div
-                    className="position-absolute d-flex align-items-center justify-content-center"
-                    style={{
-                      top: '50%',
-                      left: '50%',
-                      transform: 'translate(-50%, -50%)',
-                      width: '100%',
-                      height: '100%'
-                    }}
-                  >
-                    <div className="spinner-border text-white" role="status">
-                      <span className="visually-hidden">Loading...</span>
-                    </div>
-                  </div>
-                ) : (
-                  <img
-                    className="w-23px position-absolute top-7px right-7px"
-                    src={AssetsHelpers.toAbsoluteUrl(
-                      '/_assets/images/icon-call.png'
-                    )}
-                    alt="Call"
-                  />
-                )}
-              </button>
-            </div>
-          ),
-          align: 'center',
-          width: 80,
-          sortable: false,
-          frozen: width > 991 ? 'right' : false
         }
       ]
       if (columnsSort && columnsSort.length > 0) {

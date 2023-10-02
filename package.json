@@ -2,7 +2,7 @@
     "name": "react-teamplate",
     "version": "0.1.0",
     "private": true,
-    "_homepage": "/Admin/telesales/",
+    "homepage": "/Admin/telesales/",
     "dependencies": {
         "@material-ui/lab": "^4.0.0-alpha.61",
         "@nikitababko/id-generator": "^1.0.1",
