@@ -53,8 +53,8 @@ function StatisticalList(props) {
                   value: User.ID
                 }
               : '',
-            From: '',
-            To: '',
+            From: moment().startOf('month').toDate(),
+            To: moment().endOf('month').toDate(),
             StockID: CrStockID,
             Result: ''
           },
@@ -136,21 +136,13 @@ function StatisticalList(props) {
         },
         {
           key: 'MemberName',
-          title: 'Họ tên khách hàng',
+          title: 'Tên Spa',
           dataKey: 'MemberName',
           cellRenderer: ({ rowData }) => (
             <div>
               <div className="fw-600">{rowData?.MemberName}</div>
-              <div className="font-number">{rowData?.MobilePhone}</div>
             </div>
           ),
-          width: 250,
-          sortable: false
-        },
-        {
-          key: 'StockTitle',
-          title: 'Cơ sở',
-          dataKey: 'StockTitle',
           width: 250,
           sortable: false
         },
