@@ -270,13 +270,12 @@ function ReminderList(props) {
       },
       {
         key: 'member.FullName',
-        title: 'Họ tên khách hàng',
+        title: 'Tên Spa',
         dataKey: 'member.FullName',
         width: 250,
         cellRenderer: ({ rowData }) => (
           <div>
             <div className="fw-600">{rowData?.member?.FullName}</div>
-            <div className="font-number">{rowData?.member?.MobilePhone}</div>
           </div>
         ),
         sortable: false,
@@ -341,7 +340,7 @@ function ReminderList(props) {
             </button>
           </div>
         ),
-        width: 110,
+        width: 120,
         sortable: false
       }
     ],
